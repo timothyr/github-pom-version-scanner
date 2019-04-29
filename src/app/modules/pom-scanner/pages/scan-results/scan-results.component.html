@@ -1,0 +1,65 @@
+<div class="row">
+  <div class="span3 bs-docs-sidebar">
+    <ul class="nav nav-list bs-docs-sidenav">
+      <li><a href="#dropdowns"><i class="icon-chevron-right"></i> Dropdowns</a></li>
+      <li><a href="#buttonGroups"><i class="icon-chevron-right"></i> Button groups</a></li>
+      <li><a href="#buttonDropdowns"><i class="icon-chevron-right"></i> Button dropdowns</a></li>
+      <li class="divider"></li>
+      <li><a routerLink=""><i class="icon-chevron-right"></i> Return to Scanner</a></li>
+    </ul>
+  </div>
+  <div class="span9">
+
+    <div class="page-header" *ngIf="results.length > 0">
+      <h1>Repository Results</h1>
+    </div>
+
+    <div *ngFor="let result of results">
+      <!-- <h4>{{ result.repository.full_name }}</h4> -->
+      <a [href]="result.repository.html_url" target="_blank" class="btn btn-link">{{ result.repository.full_name }}</a>
+
+      <div *ngIf="!result.poms || result.poms.length === 0">
+        <p class="pom-text">No pom.xml file found</p>
+      </div>
+
+      <div *ngIf="result.poms">
+        <div *ngFor="let pomFile of result.poms">
+
+          <h4 class="pom-text">{{ pomFile.path }}</h4>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Dependency</th>
+                <th>Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dependency of pomFile.dependencies; index as i" class="success">
+                <td>{{ i+1 }}</td>
+                <td>{{ dependency.artifactId }}</td>
+                <td>{{ dependency.version }}</td>
+              </tr>
+              <!-- <tr class="error">
+                <td>2</td>
+                <td>TB - Monthly</td>
+                <td>Declined</td>
+              </tr>
+              <tr class="warning">
+                <td>3</td>
+                <td>TB - Monthly</td>
+                <td>Pending</td>
+              </tr>
+              <tr class="info">
+                <td>4</td>
+                <td>TB - Monthly</td>
+                <td>Call in to confirm</td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

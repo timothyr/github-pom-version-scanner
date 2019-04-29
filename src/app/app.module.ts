@@ -1,16 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
+import { RouterModule, Routes } from '@angular/router';
+
 import { AppComponent } from './app.component';
+
+import { PomScannerModule } from './modules/pom-scanner/pom-scanner.module';
+import { AboutModule } from './modules/about/about.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    PomScannerModule,
+    AboutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

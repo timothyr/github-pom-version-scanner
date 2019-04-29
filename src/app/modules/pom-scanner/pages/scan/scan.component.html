@@ -1,0 +1,11 @@
+<div class="page-header">
+  <h1>Pom.xml Scanner</h1>
+</div>
+
+<label>Organization Scan</label>
+<input type="text" placeholder="Org Name" [(ngModel)]="orgName" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+<span class="help-block">Enter the name of the GitHub organization to scan</span>
+<!-- <label class="checkbox">
+  <input type="checkbox">Scan all paths
+</label> -->
+<button class="btn btn-large" (click)="onClickScan()">Scan</button>
