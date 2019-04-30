@@ -19,7 +19,6 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
-    "@octokit/rest": "^16.25.0",
     "core-js": "^2.5.4",
     "jssoup": "0.0.10",
     "rxjs": "^6.3.3",
