@@ -5,7 +5,6 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
-
 interface RepositoryPomDisplay extends RepositoryPoms {
   isLoading: boolean;
 }
@@ -19,6 +18,7 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
 
   orgName = 'librespot-org';
   results: RepositoryPomDisplay[] = [];
+  numResultsCompleted = 0;
   error = '';
   isScanning = false;
   routeSubscription: Subscription;
@@ -42,6 +42,7 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
     this.isScanning = true;
     this.error = '';
     this.results = [];
+    this.numResultsCompleted = 0;
 
     const orgScanner: OrgScanner = await scanOrg(org);
 
@@ -59,7 +60,7 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
         poms: null,
         error: null,
         isLoading: true,
-      }
+      };
 
       return repositoryPomDisplay;
     });
@@ -77,6 +78,12 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
         repositoryPomDisplay.error = result.error;
         repositoryPomDisplay.poms = result.poms;
         repositoryPomDisplay.isLoading = false;
+
+        // Sort the new result array
+        this.sortResults();
+
+        // Update progress bar
+        this.numResultsCompleted += 1;
       },
       // On error
       (_) => {},
@@ -87,4 +94,34 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
     );
   }
 
+  sortResults(): void {
+    this.results = this.results.sort(compareResults).reverse();
+  }
+}
+
+function compareResults(a: RepositoryPomDisplay, b: RepositoryPomDisplay) {
+  const aValue = getDisplayIndexValue(a);
+  const bValue = getDisplayIndexValue(b);
+
+  return aValue - bValue;
+}
+
+function getDisplayIndexValue(display: RepositoryPomDisplay): number {
+  if (display.isLoading) {
+    return 0;
+  }
+
+  if (display.error) {
+    return -1;
+  }
+
+  if (!display.poms) {
+    return -2;
+  }
+
+  if (display.poms.length === 0) {
+    return -2;
+  }
+
+  return display.poms.length;
 }

@@ -31,7 +31,7 @@ async function getAllRepositories(org: string): Promise<any[]> {
         page,
       }).then(({ data, status, headers }) => {
         if (status !== 200) {
-          throw new Error(`GitHub returned '${status}' when requesting page ${page} of repositories for org '${org}'`);
+          throw new Error(`status '${status}' on page ${page} of repository list`);
         }
         // Number of repositories returned
         numRepositoriesInResponse = data.length;
@@ -41,7 +41,7 @@ async function getAllRepositories(org: string): Promise<any[]> {
         page += 1;
       });
     } catch (error) {
-      throw new Error(`GitHub method listForOrg('${org}') returned '${error.message}'`);
+      throw new Error(`Error getting repositories for '${org}': GitHub returned ${error.message}`);
     }
   }
 

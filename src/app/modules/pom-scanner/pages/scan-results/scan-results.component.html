@@ -10,19 +10,44 @@
   </div>
   <div class="span9">
 
-    <div class="page-header" *ngIf="results.length > 0">
+    <div class="page-header">
       <h1>Repository Results</h1>
     </div>
 
+    <!-- If Error -->
+    <div class="alert alert-error" *ngIf="error && !isScanning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Oh snap!</strong> {{ error }}
+    </div>
+
+    <!-- If Loading -->
+    <div class="progress progress-striped active" *ngIf="isScanning">
+      <div class="bar" [ngStyle]="{'width':((numResultsCompleted + 0.8)/results.length) * 100 + '%'}"></div>
+    </div>
+
+    <!-- If Finished Scan -->
+    <div class="alert alert-success" *ngIf="!error && !isScanning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Scan complete!</strong> Scanned {{ results.length }} repositories
+    </div>
+    
+    <!-- Results -->
     <div *ngFor="let result of results">
-      <!-- <h4>{{ result.repository.full_name }}</h4> -->
       <a [href]="result.repository.html_url" target="_blank" class="btn btn-link">{{ result.repository.full_name }}</a>
 
-      <div *ngIf="!result.poms || result.poms.length === 0">
+      <!-- If Error -->
+      <div class="alert alert-error" *ngIf="result.error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{ result.error }}
+      </div>
+
+      <!-- If no pom.xml -->
+      <div *ngIf="!result.error && (!result.poms || result.poms.length === 0)">
         <p class="pom-text">No pom.xml file found</p>
       </div>
 
-      <div *ngIf="result.poms">
+      <!-- Display pom.xml dependencies -->
+      <div *ngIf="!result.error && result.poms">
         <div *ngFor="let pomFile of result.poms">
 
           <h4 class="pom-text">{{ pomFile.path }}</h4>
