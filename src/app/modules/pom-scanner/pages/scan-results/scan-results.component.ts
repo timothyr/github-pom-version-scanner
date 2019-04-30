@@ -70,6 +70,9 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
     orgScanner.observable.subscribe(
       // On result
       (result: RepositoryPoms) => {
+        // Update progress bar
+        this.numResultsCompleted += 1;
+
         // Find matching repository in the results list
         const repositoryPomDisplay: RepositoryPomDisplay = this.results.find(
           r => r.repository.full_name === result.repository.full_name);
@@ -81,15 +84,16 @@ export class ScanResultsComponent implements OnInit, OnDestroy {
 
         // Sort the new result array
         this.sortResults();
-
-        // Update progress bar
-        this.numResultsCompleted += 1;
       },
       // On error
       (_) => {},
       // On complete
       () => {
-        this.isScanning = false;
+        // Delay completion by a couple hundred milliseconds
+        // to let progress bar catch up
+        setTimeout(() => {
+          this.isScanning = false;
+        }, 600);
       }
     );
   }

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ScanComponent implements OnInit {
 
-  orgName = 'librespot-org';
+  orgName = 'locationtech'; //'librespot-org';
 
   constructor(private router: Router) { }
 

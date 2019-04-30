@@ -1,9 +1,7 @@
 <div class="row">
   <div class="span3 bs-docs-sidebar">
     <ul class="nav nav-list bs-docs-sidenav">
-      <li><a href="#dropdowns"><i class="icon-chevron-right"></i> Dropdowns</a></li>
-      <li><a href="#buttonGroups"><i class="icon-chevron-right"></i> Button groups</a></li>
-      <li><a href="#buttonDropdowns"><i class="icon-chevron-right"></i> Button dropdowns</a></li>
+      <li><a href="#dropdowns"><i class="icon-chevron-right"></i> All Repositories</a></li>
       <li class="divider"></li>
       <li><a routerLink=""><i class="icon-chevron-right"></i> Return to Scanner</a></li>
     </ul>
@@ -33,7 +31,7 @@
     
     <!-- Results -->
     <div *ngFor="let result of results">
-      <a [href]="result.repository.html_url" target="_blank" class="btn btn-link">{{ result.repository.full_name }}</a>
+      <a [href]="result.repository.html_url" target="_blank" class="btn btn-link github-link">{{ result.repository.full_name }}</a>
 
       <!-- If Error -->
       <div class="alert alert-error" *ngIf="result.error">
@@ -52,7 +50,11 @@
 
           <h4 class="pom-text">{{ pomFile.path }}</h4>
 
-          <table class="table">
+          <!-- No dependencies -->
+          <p class="pom-text" *ngIf="!pomFile.dependencies || pomFile.dependencies.length === 0">No dependencies</p>
+
+          <!-- Show table of dependencies -->
+          <table class="table" *ngIf="pomFile.dependencies && pomFile.dependencies.length > 0">
             <thead>
               <tr>
                 <th>#</th>
