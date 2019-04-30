@@ -91,18 +91,42 @@ function stripRepository(repository: any): Repository {
  * Parses a pom.xml file and returns a list of dependency versions
  * @param pomFile contents of the pom.xml file
  */
-function getPomDependencies(pomFile: any): Dependency[] {
+export function getPomDependencies(pomFile: any): Dependency[] {
   const soup = new JSSoup(pomFile);
   const dependencySoup = soup.findAll('dependency');
   const dependencies: Dependency[] = [];
 
   // Iterate through all 'dependency' objects
   dependencySoup.forEach((d: any) => {
-    const artifactIdSoup = d.find('artifactId');
-    const artifactId = artifactIdSoup.getText();
+    // Get artifactId
+    let artifactId: string = null;
+    try {
+      const artifactIdSoup = d.find('artifactId');
+      artifactId = artifactIdSoup.getText();
+    } catch (_) {}
 
-    const versionSoup = d.find('version');
-    const version = versionSoup.getText();
+    // Get version
+    let version: string = null;
+    if (artifactId) {
+      try {
+        const versionSoup = d.find('version');
+        version = versionSoup.getText();
+      } catch(_) {}
+    }
+
+    // If version is a variable, attempt to find property that defines it
+    if (version && version.startsWith('${') && version.endsWith('}')) {
+      // Get the name of the version variable
+      const versionVariable = version.slice(2, -1);
+      if (versionVariable) {
+        // Search for the version variable in the properties section of pom.xml
+        const versionResult = findVersionPropertyVariable(versionVariable, soup);
+        // If version result was succesful, replace version with the result
+        if (versionResult) {
+          version = versionResult;
+        }
+      }
+    }
 
     // If there was trouble parsing the artifactId or version,
     // then the dependency will be ignored
@@ -117,6 +141,25 @@ function getPomDependencies(pomFile: any): Dependency[] {
   });
 
   return dependencies;
+}
+
+/**
+ * Attempt to parse version variable from pom dependency.
+ * For example ${random.version} should search for
+ * <random.version>3.3.3</random.version>
+ * and return 3.3.3.
+ * Returns null if not found
+ * @param versionVariable Variable that contains version
+ * @param soup Soup to search in
+ */
+function findVersionPropertyVariable(versionVariable: string, soup: any): string {
+  let version: string = null;
+  try {
+    const versionVariableSoup = soup.find(versionVariable);
+    version = versionVariableSoup.getText();
+  } catch (_) {}
+
+  return version;
 }
 
 /**
