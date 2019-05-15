@@ -1,5 +1,7 @@
 # Github Pom Version Scanner
 
+https://timothyr.github.io/github-pom-version-scanner/ 
+
 A website to scan `pom.xml` files of entire GitHub organizations.  
 Intended to check if dependency versions are up-to-date at scale.
 
@@ -20,3 +22,7 @@ This module calls for list of repositories in an org, then scans all of the repo
 ## Built with Angular 7
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.6.
+
+## Deploy
+
+`./deploy.sh`
