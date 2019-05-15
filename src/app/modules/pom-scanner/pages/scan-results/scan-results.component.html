@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="span3 bs-docs-sidebar">
+    <ul class="nav nav-list bs-docs-sidenav">
+      <li><a href="#dropdowns"><i class="icon-chevron-right"></i> All Repositories</a></li>
+      <li class="divider"></li>
+      <li><a routerLink=""><i class="icon-chevron-right"></i> Return to Scanner</a></li>
+    </ul>
+  </div>
+  <div class="span9">
+
+    <div class="page-header">
+      <h1>Repository Results</h1>
+    </div>
+
+    <!-- If Error -->
+    <div class="alert alert-error" *ngIf="error && !isScanning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Oh snap!</strong> {{ error }}
+    </div>
+
+    <!-- If Loading -->
+    <div class="progress progress-striped active" *ngIf="isScanning">
+      <div class="bar" [ngStyle]="{'width':((numResultsCompleted + 0.8)/results.length) * 100 + '%'}"></div>
+    </div>
+
+    <!-- If Finished Scan -->
+    <div class="alert alert-success" *ngIf="!error && !isScanning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Scan complete!</strong> Scanned {{ results.length }} repositories
+    </div>
+    
+    <!-- Results -->
+    <div *ngFor="let result of results">
+      <a [href]="result.repository.html_url" target="_blank" class="btn btn-link github-link">{{ result.repository.full_name }}</a>
+
+      <!-- If Error -->
+      <div class="alert alert-error" *ngIf="result.error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{ result.error }}
+      </div>
+
+      <!-- If no pom.xml -->
+      <div *ngIf="!result.error && (!result.poms || result.poms.length === 0)">
+        <p class="pom-text">No pom.xml file found</p>
+      </div>
+
+      <!-- Display pom.xml dependencies -->
+      <div *ngIf="!result.error && result.poms">
+        <div *ngFor="let pomFile of result.poms">
+
+          <h4 class="pom-text">{{ pomFile.path }}</h4>
+
+          <!-- No dependencies -->
+          <p class="pom-text" *ngIf="!pomFile.dependencies || pomFile.dependencies.length === 0">No dependencies</p>
+
+          <!-- Show table of dependencies -->
+          <table class="table" *ngIf="pomFile.dependencies && pomFile.dependencies.length > 0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Dependency</th>
+                <th>Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dependency of pomFile.dependencies; index as i" class="success">
+                <td>{{ i+1 }}</td>
+                <td>{{ dependency.artifactId }}</td>
+                <td>{{ dependency.version }}</td>
+              </tr>
+              <!-- <tr class="error">
+                <td>2</td>
+                <td>TB - Monthly</td>
+                <td>Declined</td>
+              </tr>
+              <tr class="warning">
+                <td>3</td>
+                <td>TB - Monthly</td>
+                <td>Pending</td>
+              </tr>
+              <tr class="info">
+                <td>4</td>
+                <td>TB - Monthly</td>
+                <td>Call in to confirm</td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
