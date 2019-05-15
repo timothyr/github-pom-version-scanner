@@ -7,7 +7,13 @@ Intended to check if dependency versions are up-to-date at scale.
 
 ![Pom Version Scan Results](docs/screenshot.png?raw=true "Pom Version Scan Results")
 
-## How to use
+## What is a Pom file
+
+A `pom.xml` file describes the configuration and dependencies of a Maven project.  
+Maven is a popular build tool for Java applications.  
+Read more about Pom files here: https://maven.apache.org/guides/introduction/introduction-to-the-pom.html
+
+## How to use GitHub Pom Version Scanner
 
 1. Go to https://timothyr.github.io/github-pom-version-scanner/  
 2. Type in a GitHub org (Specifically one with Java repositories - otherwise there will not be any `pom.xml` file
